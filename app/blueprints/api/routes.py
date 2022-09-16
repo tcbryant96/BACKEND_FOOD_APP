@@ -8,7 +8,6 @@ from flask_cors import cross_origin
 @basic_auth.login_required
 def get_token():
     user =basic_auth.current_user()
-    user.revoke_token()
     token = user.get_token()
     return jsonify({'token': token})
 
