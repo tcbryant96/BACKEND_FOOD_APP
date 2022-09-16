@@ -57,6 +57,27 @@ def get_item(id):
     item = Cart.query.get_or_404(id)
     return jsonify(item.to_dict())
 
+@api.route('/cart/<id>', methods=['PUT'])
+@token_auth.login_required    
+def edit_cart(id):
+    item = Cart.query.get_or_404(id)
+    user = token_auth.current_user()
+    if user.id != item.user_id:
+        return jsonify({'error': 'You are not allowed to edit this.'}), 403
+    data = request.json
+    item.update(data)
+    return jsonify(item.to_dict())
+
+@api.route('/cart/<id>', methods=['DELETE'])
+@token_auth.login_required
+def delete_item_cart(id):
+    item = Cart.query.get_or_404(id)
+    user = token_auth.current_user()
+    if user.id != item.user_id:
+        return jsonify({'error': 'You are not allowed to delete this'}), 403
+    item.delete()
+    return jsonify({'success': f'{item.item} has been deleted'})
+
 @api.route('/cart/user/')
 @cross_origin()
 @token_auth.login_required
@@ -79,7 +100,26 @@ def my_fridge():
         items.append(f.to_dict())
     return jsonify(items)
 
-    
+@api.route('/fridge/<id>', methods=['PUT'])
+@token_auth.login_required    
+def edit_fridge(id):
+    item = Fridge.query.get_or_404(id)
+    user = token_auth.current_user()
+    if user.id != item.user_id:
+        return jsonify({'error': 'You are not allowed to edit this.'}), 403
+    data = request.json
+    item.update(data)
+    return jsonify(item.to_dict())
+
+@api.route('/fridge/<id>', methods=['DELETE'])
+@token_auth.login_required
+def delete_item_fridge(id):
+    item = Fridge.query.get_or_404(id)
+    user = token_auth.current_user()
+    if user.id != item.user_id:
+        return jsonify({'error': 'You are not allowed to delete this'}), 403
+    item.delete()
+    return jsonify({'success': f'{item.item} has been deleted'})
 
 @api.route('/fridge', methods=["POST"])
 @token_auth.login_required

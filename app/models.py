@@ -76,6 +76,16 @@ class Cart(db.Model):
             "item": self.item,
             "quantity": self.quantity
         }
+    def update(self, data):
+        for field in data:
+            if field not in {'item', 'quantity', 'user_id'}:
+                continue
+            setattr(self, field, data[field])
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
 class Fridge(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -94,6 +104,17 @@ class Fridge(db.Model):
             "item": self.item,
             "quantity": self.quantity
         }
+    def update(self, data):
+        for field in data:
+            if field not in {'item', 'quantity', 'user_id'}:
+                continue
+            setattr(self, field, data[field])
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
 
 class Recipes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
